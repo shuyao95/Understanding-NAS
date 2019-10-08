@@ -1,2 +1,2 @@
-# Evaluating the Architectures Learned by Neural Architecture Search
+# Understanding Architectures Learnt by Cell-based Neural Architecture Search
 
