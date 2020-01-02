@@ -5,144 +5,127 @@ from copy import deepcopy
 Genotype = namedtuple('Genotype', 'normal normal_concat reduce reduce_concat')
 
 PRIMITIVES = [
-	'none',
-	'max_pool_3x3',
-	'avg_pool_3x3',
-	'skip_connect',
-	'sep_conv_3x3',
-	'sep_conv_5x5',
-	'dil_conv_3x3',
-	'dil_conv_5x5'
+    'none',
+    'max_pool_3x3',
+    'avg_pool_3x3',
+    'skip_connect',
+    'sep_conv_3x3',
+    'sep_conv_5x5',
+    'dil_conv_3x3',
+    'dil_conv_5x5'
 ]
 
 NASNet = Genotype(
-	normal=[('sep_conv_5x5', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 0), ('sep_conv_3x3', 0),
-	        ('avg_pool_3x3', 1), ('skip_connect', 0), ('avg_pool_3x3', 0), ('avg_pool_3x3', 0),
-	        ('sep_conv_3x3', 1), ('skip_connect', 1),
-	        ],
-	normal_concat=[2, 3, 4, 5, 6],
-	reduce=[('sep_conv_5x5', 1), ('sep_conv_7x7', 0), ('max_pool_3x3', 1), ('sep_conv_7x7', 0),
-	        ('avg_pool_3x3', 1), ('sep_conv_5x5', 0), ('skip_connect', 3), ('avg_pool_3x3', 2),
-	        ('sep_conv_3x3', 2), ('max_pool_3x3', 1),
-	        ],
-	reduce_concat=[4, 5, 6],
+    normal=[('sep_conv_5x5', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 0), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1),
+            ('skip_connect', 0), ('avg_pool_3x3', 0), ('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 1), ],
+    normal_concat=[2, 3, 4, 5, 6],
+    reduce=[('sep_conv_5x5', 1), ('sep_conv_7x7', 0), ('max_pool_3x3', 1), ('sep_conv_7x7', 0), ('avg_pool_3x3', 1),
+            ('sep_conv_5x5', 0), ('skip_connect', 3), ('avg_pool_3x3', 2), ('sep_conv_3x3', 2), ('max_pool_3x3', 1), ],
+    reduce_concat=[4, 5, 6],
 )
 
-NASNet_IMP = Genotype(
-	normal=[('sep_conv_5x5', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 1), ('sep_conv_3x3', 0),
-	        ('avg_pool_3x3', 1), ('skip_connect',0), ('avg_pool_3x3', 1), ('avg_pool_3x3', 0),
-	        ('sep_conv_3x3', 1), ('skip_connect', 0),
-	        ],
-	normal_concat=[2, 3, 4, 5, 6],
-	reduce=[('sep_conv_5x5', 1), ('sep_conv_7x7', 0), ('max_pool_3x3', 1), ('sep_conv_7x7', 0),
-	        ('avg_pool_3x3', 1), ('sep_conv_5x5',0), ('skip_connect', 1), ('avg_pool_3x3', 0),
-	        ('sep_conv_3x3', 1), ('max_pool_3x3', 0),
-	        ],
-	reduce_concat=[4, 5, 6],
+NASNet_ADAPT = Genotype(
+    normal=[('sep_conv_5x5', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1),
+            ('skip_connect', 0), ('avg_pool_3x3', 1), ('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 0), ],
+    normal_concat=[2, 3, 4, 5, 6],
+    reduce=[('sep_conv_5x5', 1), ('sep_conv_7x7', 0), ('max_pool_3x3', 1), ('sep_conv_7x7', 0), ('avg_pool_3x3', 1),
+            ('sep_conv_5x5', 0), ('skip_connect', 1), ('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ],
+    reduce_concat=[4, 5, 6],
 )
 
 AmoebaNet = Genotype(
-	normal=[('avg_pool_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 2),
-	        ('sep_conv_3x3', 0), ('avg_pool_3x3', 3), ('sep_conv_3x3', 1), ('skip_connect', 1),
-	        ('skip_connect', 0), ('avg_pool_3x3', 1),
-	        ],
-	normal_concat=[4, 5, 6],
-	reduce=[('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_7x7', 2),
-	        ('sep_conv_7x7', 0), ('avg_pool_3x3', 1), ('max_pool_3x3', 0), ('max_pool_3x3', 1),
-	        ('conv_7x1_1x7', 0), ('sep_conv_3x3', 5),
-	        ],
-	reduce_concat=[3, 4, 6]
+    normal=[('avg_pool_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 2), ('sep_conv_3x3', 0),
+            ('avg_pool_3x3', 3), ('sep_conv_3x3', 1), ('skip_connect', 1), ('skip_connect', 0), ('avg_pool_3x3', 1), ],
+    normal_concat=[4, 5, 6],
+    reduce=[('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_7x7', 2), ('sep_conv_7x7', 0),
+            ('avg_pool_3x3', 1), ('max_pool_3x3', 0), ('max_pool_3x3', 1), ('conv_7x1_1x7', 0), ('sep_conv_3x3', 5), ],
+    reduce_concat=[3, 4, 6]
 )
 
-AmoebaNet_IMP = Genotype(
-	normal=[('avg_pool_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 1),
-	        ('sep_conv_3x3', 0), ('avg_pool_3x3',1), ('sep_conv_3x3', 0), ('skip_connect', 1),
-	        ('skip_connect', 0), ('avg_pool_3x3', 1),
-	        ],
-	normal_concat=[4, 5, 6],
-	reduce=[('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_7x7', 1),
-	        ('sep_conv_7x7', 0), ('avg_pool_3x3',1), ('max_pool_3x3', 0), ('max_pool_3x3', 1),
-	        ('conv_7x1_1x7', 0), ('sep_conv_3x3', 1),
-	        ],
-	reduce_concat=[3, 4, 6]
+AmoebaNet_ADAPT = Genotype(
+    normal=[('avg_pool_3x3', 0), ('max_pool_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 1), ('sep_conv_3x3', 0),
+            ('avg_pool_3x3', 1), ('sep_conv_3x3', 0), ('skip_connect', 1), ('skip_connect', 0), ('avg_pool_3x3', 1), ],
+    normal_concat=[4, 5, 6],
+    reduce=[('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('max_pool_3x3', 0), ('sep_conv_7x7', 1), ('sep_conv_7x7', 0),
+            ('avg_pool_3x3', 1), ('max_pool_3x3', 0), ('max_pool_3x3', 1), ('conv_7x1_1x7', 0), ('sep_conv_3x3', 1), ],
+    reduce_concat=[3, 4, 6]
 )
 
 DARTS_V1 = Genotype(
-	normal=[('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('skip_connect', 0), ('sep_conv_3x3', 1),
-	        ('skip_connect', 0), ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('skip_connect', 2)],
-	normal_concat=[2, 3, 4, 5],
-	reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 0),
-	        ('max_pool_3x3', 0), ('skip_connect', 2), ('skip_connect', 2), ('avg_pool_3x3', 0)],
-	reduce_concat=[2, 3, 4, 5])
+    normal=[('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('skip_connect', 0), ('sep_conv_3x3', 1),
+            ('skip_connect', 0), ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('skip_connect', 2)],
+    normal_concat=[2, 3, 4, 5],
+    reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 0),
+            ('max_pool_3x3', 0), ('skip_connect', 2), ('skip_connect', 2), ('avg_pool_3x3', 0)],
+    reduce_concat=[2, 3, 4, 5])
 DARTS_V2 = Genotype(
-	normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_3x3', 1),
-	        ('sep_conv_3x3', 1), ('skip_connect', 0), ('skip_connect', 0), ('dil_conv_3x3', 2)],
-	normal_concat=[2, 3, 4, 5],
-	reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 1),
-	        ('max_pool_3x3', 0), ('skip_connect', 2), ('skip_connect', 2), ('max_pool_3x3', 1)],
-	reduce_concat=[2, 3, 4, 5])
+    normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_3x3', 1),
+            ('sep_conv_3x3', 1), ('skip_connect', 0), ('skip_connect', 0), ('dil_conv_3x3', 2)],
+    normal_concat=[2, 3, 4, 5],
+    reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 1),
+            ('max_pool_3x3', 0), ('skip_connect', 2), ('skip_connect', 2), ('max_pool_3x3', 1)],
+    reduce_concat=[2, 3, 4, 5])
 
 DARTS = DARTS_V2
 
 SNAS_MILD = Genotype(
-	normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 0), ('dil_conv_3x3', 1),
-	        ('skip_connect', 0), ('skip_connect', 1), ('skip_connect', 0), ('sep_conv_3x3', 1)],
-	normal_concat=[2, 3, 4, 5],
-	reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 1),
-	        ('max_pool_3x3', 1), ('skip_connect', 2), ('dil_conv_5x5', 2), ('max_pool_3x3', 0)],
-	reduce_concat=[2, 3, 4, 5])
+    normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 0), ('dil_conv_3x3', 1),
+            ('skip_connect', 0), ('skip_connect', 1), ('skip_connect', 0), ('sep_conv_3x3', 1)],
+    normal_concat=[2, 3, 4, 5],
+    reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 2), ('max_pool_3x3', 1),
+            ('max_pool_3x3', 1), ('skip_connect', 2), ('dil_conv_5x5', 2), ('max_pool_3x3', 0)],
+    reduce_concat=[2, 3, 4, 5])
 
-SNAS_IMP = Genotype(
-	normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 0), ('dil_conv_3x3', 1),
-	        ('skip_connect', 0), ('skip_connect', 1), ('skip_connect', 0), ('sep_conv_3x3', 1)],
-	normal_concat=[2, 3, 4, 5],
-	reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 0), ('max_pool_3x3', 1),
-	        ('max_pool_3x3', 0), ('skip_connect', 1), ('dil_conv_5x5', 0), ('max_pool_3x3', 1)],
-	reduce_concat=[2, 3, 4, 5])
+SNAS_ADAPT = Genotype(
+    normal=[('sep_conv_3x3', 0), ('sep_conv_3x3', 1), ('skip_connect', 0), ('dil_conv_3x3', 1),
+            ('skip_connect', 0), ('skip_connect', 1), ('skip_connect', 0), ('sep_conv_3x3', 1)],
+    normal_concat=[2, 3, 4, 5],
+    reduce=[('max_pool_3x3', 0), ('max_pool_3x3', 1), ('skip_connect', 0), ('max_pool_3x3', 1),
+            ('max_pool_3x3', 0), ('skip_connect', 1), ('dil_conv_5x5', 0), ('max_pool_3x3', 1)],
+    reduce_concat=[2, 3, 4, 5])
 
 ENAS = Genotype(
-	normal=[('sep_conv_3x3', 1), ('skip_connect', 1), ('sep_conv_5x5', 1), ('skip_connect', 0),
-	        ('avg_pool_3x3', 0), ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1),
-	        ('sep_conv_5x5', 1), ('avg_pool_3x3', 0)],
-	normal_concat=[2, 3, 4, 5, 6],
-	reduce=[('sep_conv_5x5', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 1), ('avg_pool_3x3', 1),
-	        ('sep_conv_3x3', 1), ('avg_pool_3x3', 1), ('sep_conv_5x5', 4), ('avg_pool_3x3', 1),
-	        ('sep_conv_3x3', 5), ('sep_conv_5x5', 0)],
-	reduce_concat=[2, 3, 6])
+    normal=[('sep_conv_3x3', 1), ('skip_connect', 1), ('sep_conv_5x5', 1), ('skip_connect', 0), ('avg_pool_3x3', 0),
+            ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1), ('sep_conv_5x5', 1), ('avg_pool_3x3', 0)],
+    normal_concat=[2, 3, 4, 5, 6],
+    reduce=[('sep_conv_5x5', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 1), ('avg_pool_3x3', 1), ('sep_conv_3x3', 1),
+            ('avg_pool_3x3', 1), ('sep_conv_5x5', 4), ('avg_pool_3x3', 1), ('sep_conv_3x3', 5), ('sep_conv_5x5', 0)],
+    reduce_concat=[2, 3, 6])
 
-ENAS_IMP = Genotype(
-	normal=[('sep_conv_3x3', 0), ('skip_connect', 1), ('sep_conv_5x5', 0), ('skip_connect', 0),
-	        ('avg_pool_3x3', 0), ('sep_conv_3x3',1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1),
-	        ('sep_conv_5x5', 0), ('avg_pool_3x3', 1)],
-	normal_concat=[2, 3, 4, 5, 6],
-	reduce=[('sep_conv_5x5', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1),
-	        ('sep_conv_3x3', 0), ('avg_pool_3x3',1), ('sep_conv_5x5', 0), ('avg_pool_3x3', 1),
-	        ('sep_conv_3x3', 0), ('sep_conv_5x5', 1)],
-	reduce_concat=[2, 3, 6])
+ENAS_ADAPT = Genotype(
+    normal=[('sep_conv_3x3', 0), ('skip_connect', 1), ('sep_conv_5x5', 0), ('skip_connect', 0), ('avg_pool_3x3', 0),
+            ('sep_conv_3x3', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1), ('sep_conv_5x5', 0), ('avg_pool_3x3', 1)],
+    normal_concat=[2, 3, 4, 5, 6],
+    reduce=[('sep_conv_5x5', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 0),
+            ('avg_pool_3x3', 1), ('sep_conv_5x5', 0), ('avg_pool_3x3', 1), ('sep_conv_3x3', 0), ('sep_conv_5x5', 1)],
+    reduce_concat=[2, 3, 6])
 
 
 def random_ops(arch, num_ops=8, seed=1):
-	np.random.seed(seed)
-	normal = np.random.choice(len(PRIMITIVES) - 1, num_ops)
-	reduce = np.random.choice(len(PRIMITIVES) - 1, num_ops)
-	new_arch = deepcopy(arch)
-	for i in range(num_ops):
-		new_arch.normal[i] = (PRIMITIVES[1 + normal[i]], arch.normal[i][1])
-		new_arch.reduce[i] = (PRIMITIVES[1 + reduce[i]], arch.reduce[i][1])
-	return new_arch
+    np.random.seed(seed)
+    normal = np.random.choice(len(PRIMITIVES) - 1, num_ops)
+    reduce = np.random.choice(len(PRIMITIVES) - 1, num_ops)
+    new_arch = deepcopy(arch)
+    for i in range(num_ops):
+        new_arch.normal[i] = (PRIMITIVES[1 + normal[i]], arch.normal[i][1])
+        new_arch.reduce[i] = (PRIMITIVES[1 + reduce[i]], arch.reduce[i][1])
+    return new_arch
 
 
 # same ops with different connections
 def random_conn(arch, num_ops=8, seed=1):
-	states = [0, 1]
-	new_arch = deepcopy(arch)
-	np.random.seed(seed)
-	for i in range(num_ops):
-		new_arch.normal[i] = (arch.normal[i][0], np.random.choice(states, 1).item())
-		new_arch.reduce[i] = (arch.reduce[i][0], np.random.choice(states, 1).item())
-		if i % 2 == 1:
-			states.append(states[-1] + 1)
-	return new_arch
+    states = [0, 1]
+    new_arch = deepcopy(arch)
+    np.random.seed(seed)
+    for i in range(num_ops):
+        new_arch.normal[i] = (
+            arch.normal[i][0], np.random.choice(states, 1).item())
+        new_arch.reduce[i] = (
+            arch.reduce[i][0], np.random.choice(states, 1).item())
+        if i % 2 == 1:
+            states.append(states[-1] + 1)
+    return new_arch
+
 
 ENAS_OPS1 = random_ops(ENAS, num_ops=10, seed=1)
 ENAS_OPS2 = random_ops(ENAS, num_ops=10, seed=2)
