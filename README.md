@@ -1,7 +1,5 @@
 # Understanding Architectures Learnt by Cell-based Neural Architecture Search [\[Arxiv\]](https://arxiv.org/abs/1909.09569)
 
----
-
 Codes accompanying our paper. The codes are mainly based on the work of [DARTS](https://github.com/quark0/darts) and [Visualizing the Loss Landscape of Neural Nets](https://github.com/tomgoldstein/loss-landscape). The codes for visualization are ignored since it's nearly the same as the codes [here](https://github.com/tomgoldstein/loss-landscape).
 
 ![Topologies](imgs/topologies.png)
