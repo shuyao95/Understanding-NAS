@@ -103,7 +103,7 @@ def main():
         weight_decay=args.weight_decay
     )
 
-    train_transform, valid_transform = utils._data_transforms_cifar10(args)
+    train_transform, valid_transform = utils._data_transforms_cifar100(args)
     train_data = dset.CIFAR100(
         root=args.data, train=True, download=True, transform=train_transform)
     valid_data = dset.CIFAR100(

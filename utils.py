@@ -86,6 +86,26 @@ def _data_transforms_cifar10(args):
     return train_transform, valid_transform
 
 
+def _data_transforms_cifar100(args):
+    CIFAR_MEAN = [0.5070751592371323, 0.48654887331495095, 0.4409178433670343]
+    CIFAR_STD = [0.2673342858792401, 0.2564384629170883, 0.27615047132568404]
+
+    train_transform = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+    ])
+    if args.cutout:
+        train_transform.transforms.append(Cutout(args.cutout_length))
+
+    valid_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+    ])
+    return train_transform, valid_transform
+
+
 def count_parameters_in_MB(model):
     return np.sum([np.prod(v.size()) for v in model.parameters()])/1e6
 
@@ -112,7 +132,8 @@ def drop_path(x, drop_prob, dims=(0,)):
         var_size[i] = x.size(i)
     if drop_prob > 0.:
         keep_prob = 1.-drop_prob
-        mask = Variable(torch.cuda.FloatTensor(*var_size).bernoulli_(keep_prob))
+        mask = Variable(torch.cuda.FloatTensor(
+            *var_size).bernoulli_(keep_prob))
         x.div_(keep_prob)
         x.mul_(mask)
     return x
